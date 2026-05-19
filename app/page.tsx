@@ -1,10 +1,17 @@
-"use server";
+// * Components:
+import App from "./app";
 
-export const HomePage = () => {
+// * Features:
+import Search from "./features/search";
+import Preferences from "./features/preferences";
+import Map from "./features/map";
+
+export default function HomePage() {
     return (
-        <div>
-            <p>Home Page</p>
-        </div>
-    )
+        <App
+            search={<Search />}
+            preferences={<Preferences />}
+            map={<Map />}
+        />
+    );
 }
-
