@@ -1,7 +1,13 @@
 "use client";
 
+// * React:
 import { useState } from "react";
 
+// * UI:
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/app/ui/tabs";
+import "./app.css";
+
+// * Types:
 type View = "search" | "preferences" | "map";
 
 export default function App({
@@ -16,17 +22,32 @@ export default function App({
     const [view, setView] = useState<View>("search");
 
     return (
-        <div className="h-full">
-            <nav className="flex gap-2 p-4">
-                <button onClick={() => setView("search")}>Search</button>
-                <button onClick={() => setView("preferences")}>Preferences</button>
-                <button onClick={() => setView("map")}>Map</button>
-            </nav>
-            <main className="p-4">
-                {view === "search" && search}
-                {view === "preferences" && preferences}
-                {view === "map" && map}
-            </main>
+        <div className="app">
+            <div className='flex h-full w-full items-center justify-center'>
+                <Tabs
+                    className="tabs"
+                    value={view}
+                    onValueChange={(value: View) => setView(value)}
+                >
+                    <TabsList 
+                        className="tabs-list" 
+                        variant='default'
+                    >
+                        <TabsTrigger value="search">Search</TabsTrigger>
+                        <TabsTrigger value="preferences">Preferences</TabsTrigger>
+                        <TabsTrigger value="map">Map</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="search" className="tabs-content">   
+                        {search}
+                    </TabsContent>
+                    <TabsContent value="preferences" className="tabs-content">
+                        {preferences}
+                    </TabsContent>
+                    <TabsContent value="map" className="tabs-content">
+                        {map}
+                    </TabsContent>
+                </Tabs>
+            </div>
         </div>
     );
 }

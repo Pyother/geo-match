@@ -2,8 +2,8 @@
 import App from "./app";
 
 // * Features:
-import Search from "./features/search";
-import Preferences from "./features/preferences";
+import Search from "./features/search/search";
+import Preferences from "./features/preferences/preferences";
 import Map from "./features/map";
 
 export default function HomePage() {

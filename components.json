@@ -13,7 +13,7 @@
   "iconLibrary": "hugeicons",
   "rtl": false,
   "aliases": {
-    "components": "@/app/ui/components",
+    "components": "@/app/ui",
     "utils": "@/app/lib/utils",
     "ui": "@/app/ui",
     "lib": "@/app/lib",
