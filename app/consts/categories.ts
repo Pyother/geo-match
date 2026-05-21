@@ -1,11 +1,38 @@
 export const categories = [
-    "healthcare.hospital",
-    "healthcare.pharmacy",
-    "commercial.supermarket",
-    "commercial.shopping_mall",
-    "commercial.restaurant",
-    "commercial.cafe",
-    "commercial.bar",
-    "commercial.hotel",
-    "sport.fitness.gym",
+    {
+        name: "Healthcare",
+        value: "healthcare.hospital",
+    },
+    {
+        name: "Pharmacy",
+        value: "healthcare.pharmacy",
+    },
+    {
+        name: "Supermarket",
+        value: "commercial.supermarket",
+    },
+    {
+        name: "Shopping Mall",
+        value: "commercial.shopping_mall",
+    },
+    {
+        name: "Restaurant",
+        value: "commercial.restaurant",
+    },
+    {
+        name: "Cafe",
+        value: "commercial.cafe",
+    },
+    {
+        name: "Bar",
+        value: "commercial.bar",
+    },
+    {
+        name: "Hotel",
+        value: "commercial.hotel",
+    },
+    {
+        name: "Gym",
+        value: "sport.fitness.gym",
+    },
 ]

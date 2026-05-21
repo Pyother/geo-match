@@ -33,7 +33,6 @@ export default function RootLayout({
             lang="en"
             className={
                 cn(
-                    "h-full",
                     "antialiased",
                     geistSans.variable,
                     geistMono.variable,
@@ -42,7 +41,7 @@ export default function RootLayout({
                 )
             }
         >
-            <body className={cn("h-full", "bg-background", "text-foreground")}>
+            <body className={cn("bg-background", "text-foreground")}>
                 {children}
             </body>
         </html>

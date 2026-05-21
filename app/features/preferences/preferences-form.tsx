@@ -28,8 +28,8 @@ const PreferencesForm = () => {
                     </SelectTrigger>
                     <SelectContent>
                         {categories.map((category) => (
-                            <SelectItem key={category} value={category}>
-                                {category}
+                            <SelectItem key={category.value} value={category.name}>
+                                {category.name}
                             </SelectItem>
                         ))}
                     </SelectContent>
