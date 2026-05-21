@@ -2,7 +2,7 @@
 
 // * React:
 import { useContext } from "react";
-import { AppContext } from "@/app/app";
+import { AppContext } from "@/app/page";
 
 // * Types:
 import { City } from "@/app/types";

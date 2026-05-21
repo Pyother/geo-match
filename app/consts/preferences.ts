@@ -1,4 +1,6 @@
-export const categories = [
+import type { Preference } from "@/app/types";
+
+export const preferences: Preference[] = [
     {
         name: "Healthcare",
         value: "healthcare.hospital",

@@ -1,1 +1,1 @@
-export { categories } from './categories';
+export { preferences } from './preferences';
