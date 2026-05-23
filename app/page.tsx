@@ -1,7 +1,8 @@
 "use client";
 
-// * React:
+// * React and Next:
 import { useState, createContext, type Dispatch, type SetStateAction } from "react";
+import dynamic from "next/dynamic";
 
 // * UI:
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/app/ui/tabs";
@@ -10,7 +11,7 @@ import "./app.css";
 // * Features:
 import Search from "./features/search/search";
 import Preferences from "./features/preferences/preferences";
-import Map from "./features/map";
+const Map = dynamic(() => import("./features/map/map"), { ssr: false });
 
 // * Types:
 type View = "search" | "preferences" | "map";

@@ -1,6 +1,15 @@
 .app {
     width: 100%;
-    min-height: 100vh;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .tabs {
@@ -9,6 +18,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex: 1;
+    min-height: 0;
+    gap: var(--spacing-md);
 }
 
 .tabs-list {
@@ -19,10 +31,12 @@
 
 .tabs-content {
     width: 100%;
-    padding: var(--spacing-md);
     background-color: var(--color-card);
     color: var(--color-card-foreground);
     border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
 }
 
 .feature {
@@ -32,6 +46,7 @@
     width: 100%;
     align-items: center;
     justify-content: flex-start;
+    padding: 2px 2px;
 }
 
 .feature-header {
