@@ -16,6 +16,7 @@ const Map = dynamic(() => import("./features/map/map"), { ssr: false });
 // * Types:
 type View = "search" | "preferences" | "map";
 import type { Preference } from "./types/Preference";
+import type { City } from "./types/City";
 
 // * App context:
 export const AppContext = createContext<{
@@ -23,19 +24,34 @@ export const AppContext = createContext<{
     setView: (view: View) => void;
     preferences: Preference[] | null;
     setPreferences: Dispatch<SetStateAction<Preference[] | null>>;
+    city: City | null;
+    setCity: Dispatch<SetStateAction<City | null>>;
 }>({
     view: "search",
     setView: () => {},
     preferences: null,
     setPreferences: () => {},
+    city: null,
+    setCity: () => {},
 });
 
 export default function HomePage() {
+
+    const [city, setCity] = useState<City | null>(null);
     const [view, setView] = useState<View>("search");
     const [preferences, setPreferences] = useState<Preference[] | null>(null);
 
     return (
-        <AppContext.Provider value={{ view, setView, preferences, setPreferences }}>
+        <AppContext.Provider 
+            value={{ 
+                view, 
+                setView, 
+                preferences, 
+                setPreferences, 
+                city, 
+                setCity 
+            }}
+        >
             <div className="app">
                 <div className="w-full">
                     <Tabs

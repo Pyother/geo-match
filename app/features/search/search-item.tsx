@@ -34,7 +34,7 @@ const SearchItem = ({
 }) => {
     const flag = city.country_code ? countryFlag(city.country_code) : null;
     const tz = city.timezone;
-    const { setView } = useContext(AppContext);
+    const { setView, setCity } = useContext(AppContext);
 
     return (
         <Card size="sm" className='w-full'>
@@ -62,7 +62,15 @@ const SearchItem = ({
                 </CardContent>
             )}
             <CardFooter>
-                <Button className="w-full" onClick={() => setView("preferences")}>View Details</Button>
+                <Button 
+                    className="w-full" 
+                    onClick={() => { 
+                        setCity(city); 
+                        setView("preferences"); 
+                    }}
+                >
+                    View Details
+                </Button>
             </CardFooter>
         </Card>
     );

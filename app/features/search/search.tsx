@@ -33,6 +33,7 @@ const Search = () => {
         try {
             const data = await getPlaces(query.trim());
             setResults(data?.results ?? []);
+
         } finally {
             setLoading(false);
         }
