@@ -12,7 +12,12 @@ import "./map.css";
 const InvalidateSize = () => {
     const map = useMap();
     useEffect(() => {
-        map.invalidateSize();
+        const container = map.getContainer();
+        const observer = new ResizeObserver(() => {
+            map.invalidateSize();
+        });
+        observer.observe(container);
+        return () => observer.disconnect();
     }, [map]);
     return null;
 };
