@@ -1,21 +1,42 @@
 "use client";
 
 // * React:
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { AppContext } from "@/app/page";
 
-// * Form:
-import PreferencesForm from "./preferences-form";
+// * Types:
+import type { Preference } from "@/app/types/Preference";
+
+// * UI:
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/app/ui/select";
+import { Card, CardContent, CardFooter } from "@/app/ui/card";
+import { Field, FieldDescription, FieldLabel } from "@/app/ui/field";
+import { Button } from "@/app/ui/button";
+
+// * Components:
 import PreferenceItem from "./preference-item";
 
 // * Icons:
 import { SlidersHorizontal } from "lucide-react";
 
+// * Consts:
+import { preferences } from "@/app/consts";
+
 // * Styles:
 import "./preferences.css";
 
 const Preferences = () => {
-    const { preferences: userPreferences } = useContext(AppContext);
+    const [selected, setSelected] = useState<string>("");
+    const {
+        preferences: userPreferences,
+        setPreferences: setUserPreferences,
+    } = useContext(AppContext);
 
     return (
         <div className='feature'>
@@ -26,7 +47,49 @@ const Preferences = () => {
                 </h2>
                 <p>Manage your location preferences to find the best matching districts.</p>
             </div>
-            <PreferencesForm />
+            <Card className='form'>
+                <CardContent>
+                    <Field>
+                        <FieldLabel htmlFor="preference">Preference</FieldLabel>
+                        <FieldDescription>Select a preference to find matching districts.</FieldDescription>
+                        <Select value={selected} onValueChange={(value) => setSelected(value ?? "")}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select a category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {preferences.map((preference) => (
+                                    <SelectItem
+                                        key={preference.value}
+                                        value={preference.name}
+                                        disabled={userPreferences?.some(p => p.name === preference.name)}
+                                    >
+                                        {preference.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </Field>
+                </CardContent>
+                <CardFooter>
+                    <Button
+                        className='w-full'
+                        disabled={!selected}
+                        onClick={() => {
+                            if (!selected) return;
+                            const newPreference = preferences.find(p => p.name === selected);
+                            if (!newPreference) return;
+                            setUserPreferences((prev: Preference[] | null) => {
+                                if (!prev) return [newPreference];
+                                if (prev.some(p => p.name === newPreference.name)) return prev;
+                                return [...prev, newPreference];
+                            });
+                            setSelected("");
+                        }}
+                    >
+                        Add preference
+                    </Button>
+                </CardFooter>
+            </Card>
             {userPreferences && userPreferences.length > 0 && (
                 <>
                     <p>{userPreferences.length} preference{userPreferences.length > 1 ? "s" : ""} selected:</p>
