@@ -28,16 +28,24 @@ const countryFlag = (code: string) =>
     );
 
 const SearchItem = ({
-    city
+    city,
+    severity = "default",
+    removable = false,
 }: {
-    city: City
+    city: City,
+    severity?: "default" | "info",
+    removable?: boolean
 }) => {
     const flag = city.country_code ? countryFlag(city.country_code) : null;
     const tz = city.timezone;
-    const { setView, setCity } = useContext(AppContext);
+    const { setCity } = useContext(AppContext);
 
     return (
-        <Card size="sm" className='w-full'>
+        <Card 
+            size="sm" 
+            severity={severity} 
+            className='w-full max-w-md'
+        >
             <CardHeader>
                 <CardTitle className="flex items-center gap-1.5">
                     {flag && <span>{flag}</span>}
@@ -61,16 +69,26 @@ const SearchItem = ({
                     </div>
                 </CardContent>
             )}
-            <CardFooter>
-                <Button 
-                    className="w-full" 
-                    onClick={() => { 
-                        setCity(city); 
-                        setView("preferences"); 
-                    }}
-                >
-                    View Details
-                </Button>
+            <CardFooter className="flex-col gap-2">
+                {!removable && (
+                    <Button 
+                        className="w-full" 
+                        onClick={() => { 
+                            setCity(city); 
+                        }}
+                    >
+                        Select
+                    </Button>
+                )}
+                {removable && (
+                    <Button 
+                        variant="destructive" 
+                        className="w-full" 
+                        onClick={() => setCity(null)}
+                    >
+                        Remove
+                    </Button>
+                )}
             </CardFooter>
         </Card>
     );

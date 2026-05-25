@@ -1,10 +1,11 @@
 "use client";
 
 // * React:
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AppContext } from "@/app/page";
 
 // * Icons:
-import { Loader2, MapPin } from "lucide-react";
+import { Loader2, MapPin, MoveRight } from "lucide-react";
 
 // * Types:
 import type { City } from "@/app/types";
@@ -27,13 +28,13 @@ const Search = () => {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<City[]>([]);
     const [loading, setLoading] = useState(false);
+    const { city, setView } = useContext(AppContext);
 
     const handleSubmit = async () => {
         setLoading(true);
         try {
             const data = await getPlaces(query.trim());
             setResults(data?.results ?? []);
-
         } finally {
             setLoading(false);
         }
@@ -48,8 +49,11 @@ const Search = () => {
                 </h2>
                 <p>Select a city to start finding districts that match your location preferences.</p>
             </div>
+            {city && (
+                <SearchItem city={city} severity="info" removable={true} />
+            )}
             <div className='form'>
-                <Card>
+                <Card className='w-full max-w-md'>
                     <CardContent>
                         <Field>
                             <FieldLabel htmlFor="search">Search</FieldLabel>
@@ -58,6 +62,12 @@ const Search = () => {
                                 id="search"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter" && !loading) {
+                                        handleSubmit();
+                                    }   
+                                }}
+                                placeholder="e.g. New York, NY"
                             />
                         </Field>
                     </CardContent>
@@ -76,6 +86,15 @@ const Search = () => {
                     </CardFooter>
                 </Card>
             </div>
+            {city && (
+                <Button
+                    variant="default"
+                    onClick={() => setView("preferences")}
+                >
+                    Go to preferences
+                    <MoveRight className="size-4" />
+                </Button>
+            )}
             {results.length > 0 && (
                 <>
                     <p>{results.length} results found:</p>

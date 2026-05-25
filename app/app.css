@@ -71,3 +71,23 @@
     gap: var(--spacing-sm);
 }
 
+.severity-default {
+    border-color: var(--color-border) !important;
+}
+
+.severity-success {
+    border-color: var(--color-green-500) !important;
+}
+
+.severity-warning {
+    border-color: var(--color-yellow-500) !important;
+}
+
+.severity-error {
+    border-color: var(--color-red-500) !important;
+}
+
+.severity-info {
+    border-color: var(--color-blue-500) !important;
+}
+

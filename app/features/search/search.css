@@ -3,6 +3,8 @@
     flex-direction: column;
     gap: var(--spacing-md);
     width: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 .search-results {
@@ -11,36 +13,24 @@
     gap: var(--spacing-md);
     grid-template-columns: 1fr;
     justify-content: center;
+    align-items: center;
 }
 
-@media (max-width: 768px) {
-    .form {
-        max-width: 100%;
-    }
-}
+
 
 @media (min-width: 769px) and (max-width: 1024px) {
-    .form {
-        max-width: calc(80% - 2 * var(--spacing-md));
-    }
     .search-results {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
 }
 
 @media (min-width: 1025px) and (max-width: 1280px) {
-    .form {
-        max-width: calc(60% - 2 * var(--spacing-md));
-    }
     .search-results {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
 @media (min-width: 1281px) {
-    .form {
-        max-width: calc(35% - 2 * var(--spacing-md));
-    }
     .search-results {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
