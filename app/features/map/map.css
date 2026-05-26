@@ -33,3 +33,11 @@
     gap: var(--spacing-sm);
     padding: var(--spacing-sm);
 }
+
+.map-calculating {
+    position: absolute;
+    bottom: var(--spacing-md);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
