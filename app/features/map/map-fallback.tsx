@@ -14,18 +14,32 @@ import {
 import { Button } from "@/app/ui/button";
 import "./map.css";
 
-const MapFallback = () => {
+const MapFallback = ({ 
+    areaExceeded, 
+    noGeometry 
+}: { 
+    areaExceeded?: number | null, 
+    noGeometry?: boolean 
+}) => {
 
     const { city, preferences, setView } = useContext(AppContext);
 
     return (
-        <Alert variant="default" className="map-fallback">
+        <Alert variant="default" className="map-fallback w-full max-w-md">
             <AlertTitle>Map Unavailable</AlertTitle>
             <AlertDescription>
-                To view the map, first select a city and your preferences.
+                { !city || !preferences ? (
+                    "Please choose a city and set your preferences to view the map."
+                ) : noGeometry ? (
+                    "The boundary of the selected area could not be determined. Please choose a different city."
+                ) : areaExceeded ? (
+                    `The selected area is ${areaExceeded.toFixed(2)} km². It's too large. Please choose a smaller area.`
+                ) : (
+                    "An unexpected error occurred while loading the map. Please try again."
+                )}
             </AlertDescription>
                 <AlertAction>
-                    {!city &&
+                    {(!city || areaExceeded || noGeometry) &&
                         <Button 
                             variant="outline" 
                             size="sm" 
