@@ -26,7 +26,7 @@ import "./map.css";
 
 const Map = () => {
 
-    const { city, preferences, details } = useContext(AppContext);
+    const { city, preferences, details, places } = useContext(AppContext);
     const area = useMemo(() => details?.geometry ? getArea(details.geometry as Geometry) : null, [details]);
     const [grid, setGrid] = useState<ReturnType<typeof getGrid> | null>(null);
     const isCalculating = !!details?.geometry && grid === null;
@@ -48,7 +48,7 @@ const Map = () => {
     return (
         <Card className="map-container">
             <CardContent>
-                {city && preferences && details?.geometry && (!area || area <= 1000) ? (
+                {city && preferences && details?.geometry && (!area || area <= 2000) ? (
                     <MapContainer 
                         center={[city.lat, city.lon]} 
                         zoom={13} 
@@ -62,7 +62,7 @@ const Map = () => {
                         {details?.geometry && (
                             <>
                                 <CityBoundaries geometry={details.geometry} />
-                                {grid && <CityGrid grid={grid} />}
+                                {grid && places && <CityGrid grid={grid} places={places} />}
                             </>
                         )}
                         <InvalidateSize />
@@ -70,7 +70,7 @@ const Map = () => {
                 ) : (
                     <div className="flex h-full w-full items-center justify-center">
                         <MapFallback
-                            areaExceeded={area && area > 1000 ? area : null}
+                            areaExceeded={area && area > 2000 ? area : null}
                             noGeometry={!!(details && !details.geometry)}
                         />
                     </div>

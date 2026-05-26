@@ -19,19 +19,19 @@ export const preferences: Preference[] = [
     },
     {
         name: "Restaurant",
-        value: "commercial.restaurant",
+        value: "catering.restaurant",
     },
     {
         name: "Cafe",
-        value: "commercial.cafe",
+        value: "catering.cafe",
     },
     {
         name: "Bar",
-        value: "commercial.bar",
+        value: "catering.bar",
     },
     {
         name: "Hotel",
-        value: "commercial.hotel",
+        value: "accommodation.hotel",
     },
     {
         name: "Gym",
