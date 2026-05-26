@@ -4,6 +4,9 @@
 import { useState, useContext } from "react";
 import { AppContext } from "@/app/page";
 
+// * Actions:
+import { getPlaces } from "./actions";
+
 // * Types:
 import type { Preference } from "@/app/types/Preference";
 
@@ -37,8 +40,10 @@ const Preferences = () => {
         city,
         preferences: userPreferences,
         setPreferences: setUserPreferences,
-        setView
+        setView,
+        setPlaces
     } = useContext(AppContext);
+    const [pendingPreferences, setPendingPreferences] = useState<Preference[] | null>(userPreferences);;
 
     return (
         <div className='feature'>
@@ -64,7 +69,7 @@ const Preferences = () => {
                                         <SelectItem
                                             key={preference.value}
                                             value={preference.name}
-                                            disabled={userPreferences?.some(p => p.name === preference.name)}
+                                            disabled={pendingPreferences?.some(p => p.name === preference.name)}
                                         >
                                             {preference.name}
                                         </SelectItem>
@@ -73,7 +78,9 @@ const Preferences = () => {
                             </Select>
                         </Field>
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className="flex flex-col items-stretch gap-(--spacing-sm)">
+
+                        {/* Add selected preference to pending preferences */}
                         <Button
                             className='w-full'
                             disabled={!selected}
@@ -81,7 +88,7 @@ const Preferences = () => {
                                 if (!selected) return;
                                 const newPreference = preferences.find(p => p.name === selected);
                                 if (!newPreference) return;
-                                setUserPreferences((prev: Preference[] | null) => {
+                                setPendingPreferences((prev: Preference[] | null) => {
                                     if (!prev) return [newPreference];
                                     if (prev.some(p => p.name === newPreference.name)) return prev;
                                     return [...prev, newPreference];
@@ -91,9 +98,25 @@ const Preferences = () => {
                         >
                             Add preference
                         </Button>
+
+                        {/* Save preferences and fetch places */}
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                if (!pendingPreferences || !city) return;
+                                setUserPreferences(pendingPreferences);
+                                getPlaces(city, pendingPreferences).then(places => {
+                                    setPlaces(places);
+                                });
+                            }}
+                        >
+                            Save preferences
+                        </Button>
                     </CardFooter>
                 </Card>
             </div>
+
+            {/* Navigation buttons */}
             <div className='flex flex-row items-center gap-(--spacing-md)'>
                 {!city && (
                     <Button
@@ -114,12 +137,22 @@ const Preferences = () => {
                     </Button>
                 )}
             </div>
-            {userPreferences && userPreferences.length > 0 && (
+
+            {/* Pending preferences list */}
+            {pendingPreferences && pendingPreferences.length > 0 && (
                 <>
-                    <p>{userPreferences.length} preference{userPreferences.length > 1 ? "s" : ""} selected:</p>
+                    <p>{pendingPreferences.length} preference{pendingPreferences.length > 1 ? "s" : ""} selected:</p>
                     <div className="preferences-list">
-                        {userPreferences.map((preference) => (
-                            <PreferenceItem key={preference.value} preference={preference} />
+                        {pendingPreferences.map((preference) => (
+                            <PreferenceItem
+                                key={preference.value}
+                                preference={preference}
+                                saved={userPreferences?.some(p => p.value === preference.value)}
+                                onRemove={() => setPendingPreferences(prev => {
+                                    const updated = prev?.filter(p => p.value !== preference.value) ?? null;
+                                    return updated && updated.length > 0 ? updated : null;
+                                })}
+                            />
                         ))}
                     </div>
                 </>

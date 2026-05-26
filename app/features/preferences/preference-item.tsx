@@ -1,9 +1,5 @@
 "use client";
 
-// * React:
-import { useContext } from "react";
-import { AppContext } from "@/app/page";
-
 // * Types:
 import type { Preference } from "@/app/types/Preference";
 
@@ -13,20 +9,12 @@ import { X } from "lucide-react";
 // * UI:
 import { Badge } from "@/app/ui/badge";
 
-const PreferenceItem = ({ preference }: { preference: Preference }) => {
-    const { preferences, setPreferences } = useContext(AppContext);
-
-    const handleRemove = () => {
-        if (!preferences) return;
-        const updated = preferences.filter(p => p.value !== preference.value);
-        setPreferences(updated.length > 0 ? updated : null);
-    };
-
+const PreferenceItem = ({ preference, saved, onRemove }: { preference: Preference, saved?: boolean, onRemove: () => void }) => {
     return (
-        <Badge variant="outline" className="h-7 gap-(--spacing-md) px-(--spacing-md) text-xs">
+        <Badge variant="outline" className={`h-7 gap-(--spacing-md) px-(--spacing-md) text-xs${saved ? ' severity-info' : ''}`}>
             {preference.name}
             <button
-                onClick={handleRemove}
+                onClick={onRemove}
                 aria-label={`Remove ${preference.name}`}
                 className="ml-(--spacing-sm) rounded-full opacity-60 hover:opacity-100 focus:outline-none"
             >
