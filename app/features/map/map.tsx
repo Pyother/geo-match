@@ -5,31 +5,19 @@ import { useContext } from "react";
 import { AppContext } from "@/app/page";
 
 // * Leaflet:
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
-import { useEffect } from 'react';
+import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 
 // * UI:
 import { Card, CardContent } from "@/app/ui/card";
 import MapFallback from "./map-fallback";
+import InvalidateSize from "./invalidate-size";
 import "./map.css";
 
-const InvalidateSize = () => {
-    const map = useMap();
-    useEffect(() => {
-        const container = map.getContainer();
-        const observer = new ResizeObserver(() => {
-            map.invalidateSize();
-        });
-        observer.observe(container);
-        return () => observer.disconnect();
-    }, [map]);
-    return null;
-};
 
 const Map = () => {
 
-    const { city, preferences } = useContext(AppContext);
+    const { city, preferences, details } = useContext(AppContext);
 
     return (
         <Card className="map-container">
@@ -44,6 +32,9 @@ const Map = () => {
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
+                        {details?.geometry && (
+                            <GeoJSON data={details.geometry} />
+                        )}
                         <InvalidateSize />
                     </MapContainer>
                 ) : (

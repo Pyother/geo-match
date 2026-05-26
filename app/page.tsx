@@ -15,8 +15,7 @@ const Map = dynamic(() => import("./features/map/map"), { ssr: false });
 
 // * Types:
 type View = "search" | "preferences" | "map";
-import type { Preference } from "./types/Preference";
-import type { City } from "./types/City";
+import { City, Preference, Details } from "@/app/types";
 
 // * App context:
 export const AppContext = createContext<{
@@ -26,6 +25,8 @@ export const AppContext = createContext<{
     setPreferences: Dispatch<SetStateAction<Preference[] | null>>;
     city: City | null;
     setCity: Dispatch<SetStateAction<City | null>>;
+    details: Details | null;
+    setDetails: Dispatch<SetStateAction<Details | null>>;
 }>({
     view: "search",
     setView: () => {},
@@ -33,6 +34,8 @@ export const AppContext = createContext<{
     setPreferences: () => {},
     city: null,
     setCity: () => {},
+    details: null,
+    setDetails: () => {},
 });
 
 export default function HomePage() {
@@ -40,6 +43,7 @@ export default function HomePage() {
     const [city, setCity] = useState<City | null>(null);
     const [view, setView] = useState<View>("search");
     const [preferences, setPreferences] = useState<Preference[] | null>(null);
+    const [details, setDetails] = useState<Details | null>(null);
 
     return (
         <AppContext.Provider 
@@ -49,7 +53,9 @@ export default function HomePage() {
                 preferences, 
                 setPreferences, 
                 city, 
-                setCity 
+                setCity,
+                details,
+                setDetails
             }}
         >
             <div className="app">

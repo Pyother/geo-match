@@ -1,6 +1,6 @@
 "use server";
 
-import type { City } from "@/app/types/City";
+import { City, Details } from "@/app/types";
 
 export async function getPlaces(query: string): Promise<{ results: City[] } | null> {
 
@@ -10,4 +10,13 @@ export async function getPlaces(query: string): Promise<{ results: City[] } | nu
     
     const places = await fetch(url);
     return places.json();
+}
+
+export async function getCityDetails(city: City): Promise<Details | null> {
+
+    const apiKey = process.env.GEOAPIFY_API_KEY;
+    const data = await fetch(`https://api.geoapify.com/v2/place-details?id=${city.place_id}&apiKey=${apiKey}`);
+    
+    const result = await data.json();
+    return result.features?.[0] ?? null;
 }

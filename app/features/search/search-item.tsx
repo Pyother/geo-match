@@ -4,8 +4,11 @@
 import { useContext } from "react";
 import { AppContext } from "@/app/page";
 
+// * Actions:
+import { getCityDetails } from "./actions";
+
 // * Types:
-import { City } from "@/app/types";
+import { City, Details } from "@/app/types";
 
 // * Icons:
 import { Clock } from "lucide-react";
@@ -38,7 +41,7 @@ const SearchItem = ({
 }) => {
     const flag = city.country_code ? countryFlag(city.country_code) : null;
     const tz = city.timezone;
-    const { setCity } = useContext(AppContext);
+    const { setCity, setDetails } = useContext(AppContext);
 
     return (
         <Card 
@@ -73,8 +76,10 @@ const SearchItem = ({
                 {!removable && (
                     <Button 
                         className="w-full" 
-                        onClick={() => { 
+                        onClick={async () => { 
                             setCity(city); 
+                            const details = await getCityDetails(city);
+                            setDetails(details);
                         }}
                     >
                         Select
@@ -84,7 +89,10 @@ const SearchItem = ({
                     <Button 
                         variant="destructive" 
                         className="w-full" 
-                        onClick={() => setCity(null)}
+                        onClick={() => {
+                            setCity(null);
+                            setDetails(null);
+                        }}
                     >
                         Remove
                     </Button>
