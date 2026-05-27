@@ -25,10 +25,7 @@ import {
 } from "@/app/ui/card";
 import { Button } from "@/app/ui/button";
 
-const countryFlag = (code: string) =>
-    String.fromCodePoint(
-        ...[...code.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)
-    );
+import { countryFlag } from "./city-chip";
 
 const SearchItem = ({
     city,
