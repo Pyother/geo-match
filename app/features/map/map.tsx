@@ -21,6 +21,7 @@ import { Card, CardContent } from "@/app/ui/card";
 import { Button } from "@/app/ui/button";
 import { ChartNoAxesColumn } from "lucide-react";
 import MapFallback from "./map-fallback";
+import MapPanel from "./map-panel";
 import GridFallback from "./grid-fallback";
 import CityBoundaries from "./city-boundaries";
 import CityGrid from "./city-grid";
@@ -89,6 +90,7 @@ const Map = () => {
                             </div>
                         )}
                         <InvalidateSize />
+                        <MapPanel />
                     </MapContainer>
                 ) : (
                     <div className="flex h-full w-full items-center justify-center">

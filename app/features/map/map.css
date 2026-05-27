@@ -49,3 +49,14 @@
     transform: translateX(-50%);
     z-index: 1000;
 }
+
+.map-panel {
+    position: absolute;
+    top: var(--spacing-md);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex; 
+    flex-direction: row;
+    gap: var(--spacing-md);
+    z-index: 1000;
+}

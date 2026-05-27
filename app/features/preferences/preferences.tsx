@@ -1,9 +1,16 @@
 "use client";
 
+// * React:
 import { useState, useContext } from "react";
 import { AppContext } from "@/app/page";
+
+// * Actions:
 import { getPlaces } from "./actions";
+
+// * Types:
 import type { Preference } from "@/app/types/Preference";
+
+// * UI:
 import { Card, CardContent, CardFooter } from "@/app/ui/card";
 import { Button } from "@/app/ui/button";
 import { Spinner } from "@/app/ui/spinner";
@@ -13,10 +20,18 @@ import PreferencesFallback from "./preferences-fallback";
 import { SlidersHorizontal, MoveRight, MoveLeft } from "lucide-react";
 import "./preferences.css";
 
+
 const Preferences = () => {
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { city, preferences: saved, setPreferences, setView, setPlaces } = useContext(AppContext);
+    const { 
+        city, 
+        preferences: saved, 
+        setPreferences, 
+        setView, 
+        setPlaces 
+    } = useContext(AppContext);
     const [pending, setPending] = useState<Preference[] | null>(saved);
 
     const hasPending = pending && pending.length > 0;
@@ -30,10 +45,12 @@ const Preferences = () => {
     };
 
     const handleRemove = (pref: Preference) => {
-        setPending(prev => {
+        const filter = (prev: Preference[] | null) => {
             const updated = prev?.filter(p => p.value !== pref.value) ?? null;
             return updated?.length ? updated : null;
-        });
+        };
+        setPending(filter);
+        setPreferences(filter);
     };
 
     const handleSave = async () => {
@@ -68,8 +85,16 @@ const Preferences = () => {
                     <Card className="w-full max-w-md">
                         <CardContent className="flex flex-col gap-(--spacing-md)">
                             <PreferenceSelect pending={pending} onAdd={handleAdd} />
-                            {hasPending && <PreferenceList pending={pending} saved={saved} onRemove={handleRemove} />}
-                            {error && <p className="text-sm text-destructive">{error}</p>}
+                            {hasPending && 
+                                <PreferenceList 
+                                    pending={pending} 
+                                    saved={saved} 
+                                    onRemove={handleRemove} 
+                                />
+                            }
+                            {error && 
+                                <p className="text-sm text-destructive">{error}</p>
+                            }
                         </CardContent>
                         <CardFooter className="flex flex-col items-stretch gap-(--spacing-sm)">
                             <Button disabled={!hasPending || loading} onClick={handleSave}>
