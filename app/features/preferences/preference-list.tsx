@@ -13,10 +13,19 @@ const PreferenceList = ({
     onRemove: (preference: Preference) => void;
 }) => (
     <div className="flex flex-col gap-(--spacing-sm)">
-        <p className="text-xs text-muted-foreground">
-            {pending.length} preference{pending.length > 1 ? "s" : ""} selected:
-        </p>
         <div className="preferences-list">
+            {saved && saved.length > 0 && 
+            saved
+                .filter(s => !pending.some(p => p.value === s.value))
+                .map((preference) => (
+                    <PreferenceItem 
+                        key={preference.value}
+                        preference={preference}
+                        saved={true}
+                        removable={false}
+                    />
+                ))}
+            
             {pending.map((preference) => (
                 <PreferenceItem
                     key={preference.value}

@@ -20,7 +20,6 @@ import PreferencesFallback from "./preferences-fallback";
 import { SlidersHorizontal, MoveRight, MoveLeft } from "lucide-react";
 import "./preferences.css";
 
-
 const Preferences = () => {
 
     const [loading, setLoading] = useState(false);
@@ -35,6 +34,7 @@ const Preferences = () => {
     const [pending, setPending] = useState<Preference[] | null>(saved);
 
     const hasPending = pending && pending.length > 0;
+    const hasNewPreferences = !!pending?.some(p => !saved?.some(s => s.value === p.value));
 
     const handleAdd = (pref: Preference) => {
         setPending(prev => {
@@ -61,7 +61,6 @@ const Preferences = () => {
             const places = await getPlaces(city, pending);
             setPreferences(pending);
             setPlaces(places);
-            setView("map");
         } catch {
             setError("Failed to fetch places. Please try again.");
         } finally {
@@ -85,9 +84,9 @@ const Preferences = () => {
                     <Card className="w-full max-w-md">
                         <CardContent className="flex flex-col gap-(--spacing-md)">
                             <PreferenceSelect pending={pending} onAdd={handleAdd} />
-                            {hasPending && 
+                            {(hasPending || saved?.length) && 
                                 <PreferenceList 
-                                    pending={pending} 
+                                    pending={pending ?? []} 
                                     saved={saved} 
                                     onRemove={handleRemove} 
                                 />
@@ -97,15 +96,22 @@ const Preferences = () => {
                             }
                         </CardContent>
                         <CardFooter className="flex flex-col items-stretch gap-(--spacing-sm)">
-                            <Button disabled={!hasPending || loading} onClick={handleSave}>
-                                {loading ? <><Spinner /> Searching for places…</> : "Save & go to map"}
+                            <Button 
+                                disabled={!hasNewPreferences || loading} 
+                                onClick={handleSave}
+                            >
+                                {loading ? <><Spinner /> Searching for places…</> : "Save preferences"}
                             </Button>
                             <div className="flex gap-(--spacing-sm)">
                                 <Button variant="outline" className="flex-1" onClick={() => setView("search")}>
                                     <MoveLeft className="size-4" /> Back to search
                                 </Button>
                                 {saved && (
-                                    <Button variant="outline" className="flex-1" onClick={() => setView("map")}>
+                                    <Button 
+                                        variant="default" 
+                                        className="flex-1" 
+                                        onClick={() => setView("map")}
+                                    >
                                         Go to map <MoveRight className="size-4" />
                                     </Button>
                                 )}

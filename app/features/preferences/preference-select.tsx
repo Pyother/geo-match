@@ -1,7 +1,12 @@
 "use client";
 
+// * React:
 import { useState } from "react";
+
+// * Types:
 import type { Preference } from "@/app/types/Preference";
+
+// * UI:
 import {
     Select,
     SelectContent,
@@ -11,6 +16,8 @@ import {
 } from "@/app/ui/select";
 import { Field, FieldDescription, FieldLabel } from "@/app/ui/field";
 import { Button } from "@/app/ui/button";
+
+// * Constants:
 import { preferences } from "@/app/consts";
 
 const PreferenceSelect = ({
