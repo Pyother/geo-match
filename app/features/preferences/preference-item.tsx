@@ -9,7 +9,15 @@ import { X } from "lucide-react";
 // * UI:
 import { Badge } from "@/app/ui/badge";
 
-const PreferenceItem = ({ preference, saved, onRemove }: { preference: Preference, saved?: boolean, onRemove: () => void }) => {
+const PreferenceItem = ({ 
+    preference, 
+    saved, 
+    onRemove 
+}: { 
+    preference: Preference, 
+    saved?: boolean, 
+    onRemove: () => void 
+}) => {
     return (
         <Badge variant="outline" className={`h-7 gap-(--spacing-md) px-(--spacing-md) text-xs${saved ? ' severity-info' : ''}`}>
             {preference.name}

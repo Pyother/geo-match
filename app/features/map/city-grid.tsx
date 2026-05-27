@@ -16,8 +16,7 @@ const CityGrid = ({ grid, places }: Props) => {
     console.log(matched);
     const maxCount = Math.max(...matched.map((f) => f.properties.count), 1);
 
-    const getColor = (count: number) =>
-        palette[Math.round((count / maxCount) * 6)];
+    const getColor = (count: number) => palette[Math.round((count / maxCount) * 6)];
 
     return (
         <GeoJSON

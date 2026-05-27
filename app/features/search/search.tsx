@@ -5,7 +5,7 @@ import { useState, useContext } from "react";
 import { AppContext } from "@/app/page";
 
 // * Icons:
-import { Loader2, MapPin, MoveRight } from "lucide-react";
+import { MapPin, MoveRight, Search as SearchIcon, X } from "lucide-react";
 
 // * Types:
 import type { City } from "@/app/types";
@@ -18,23 +18,36 @@ import { Field, FieldDescription, FieldLabel } from "@/app/ui/field";
 import { Input } from "@/app/ui/input";
 import { Button } from "@/app/ui/button";
 import { Card, CardContent, CardFooter } from "@/app/ui/card";
+import { Spinner } from "@/app/ui/spinner";
+import { Badge } from "@/app/ui/badge";
 import "./search.css";
 
 // * Components:
 import SearchItem from "./search-item";
+
+const countryFlag = (code: string) =>
+    String.fromCodePoint(
+        ...[...code.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)
+    );
 
 const Search = () => {
 
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<City[]>([]);
     const [loading, setLoading] = useState(false);
-    const { city, setView } = useContext(AppContext);
+    const [error, setError] = useState<string | null>(null);
+    const { city, setCity, setDetails, setView } = useContext(AppContext);
 
-    const handleSubmit = async () => {
+    const handleSearch = async () => {
+        if (!query.trim()) return;
         setLoading(true);
+        setError(null);
         try {
             const data = await getPlaces(query.trim());
             setResults(data?.results ?? []);
+            if (!data?.results?.length) setError("No results found. Try a different query.");
+        } catch {
+            setError("Search failed. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -49,58 +62,64 @@ const Search = () => {
                 </h2>
                 <p>Select a city to start finding districts that match your location preferences.</p>
             </div>
-            {city && (
-                <SearchItem city={city} severity="info" removable={true} />
-            )}
             <div className='form'>
                 <Card className='w-full max-w-md'>
-                    <CardContent>
+                    <CardContent className="flex flex-col gap-(--spacing-md)">
+                        {city && (
+                            <div className="flex items-center justify-between rounded-md border bg-muted/40 px-3 py-2">
+                                <div className="flex items-center gap-2 text-sm font-medium">
+                                    {city.country_code && <span>{countryFlag(city.country_code)}</span>}
+                                    <span>{city.city ?? city.name}</span>
+                                    <Badge variant="outline" className="text-[10px]">{city.result_type}</Badge>
+                                </div>
+                                <button
+                                    onClick={() => { setCity(null); setDetails(null); }}
+                                    aria-label="Remove selected city"
+                                    className="rounded-full p-0.5 opacity-60 hover:opacity-100"
+                                >
+                                    <X className="size-3.5" />
+                                </button>
+                            </div>
+                        )}
                         <Field>
                             <FieldLabel htmlFor="search">Search</FieldLabel>
-                            <FieldDescription>Enter your search query</FieldDescription>
-                            <Input
-                                id="search"
-                                value={query}
-                                onChange={(e) => setQuery(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter" && !loading) {
-                                        handleSubmit();
-                                    }   
-                                }}
-                                placeholder="e.g. New York, NY"
-                            />
+                            <FieldDescription>Enter a city name to search</FieldDescription>
+                            <div className="flex gap-(--spacing-sm)">
+                                <Input
+                                    id="search"
+                                    value={query}
+                                    onChange={(e) => setQuery(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter" && !loading) handleSearch();
+                                    }}
+                                    placeholder="e.g. New York, NY"
+                                />
+                                <Button
+                                    disabled={!query.trim() || loading}
+                                    onClick={handleSearch}
+                                >
+                                    {loading ? <Spinner /> : <SearchIcon className="size-4" />}
+                                </Button>
+                            </div>
                         </Field>
+                        {error && <p className="text-sm text-destructive">{error}</p>}
                     </CardContent>
-                    <CardFooter>
-                        <Button
-                            type="submit"
-                            className="w-full"
-                            disabled={!query.trim() || loading}
-                            onClick={handleSubmit}
-                        >
-                            {loading
-                                ? <Loader2 className="animate-spin" />
-                                : "Search"
-                            }
-                        </Button>
-                    </CardFooter>
+                    {city && (
+                        <CardFooter>
+                            <Button className="w-full" onClick={() => setView("preferences")}>
+                                Go to preferences
+                                <MoveRight className="size-4" />
+                            </Button>
+                        </CardFooter>
+                    )}
                 </Card>
             </div>
-            {city && (
-                <Button
-                    variant="default"
-                    onClick={() => setView("preferences")}
-                >
-                    Go to preferences
-                    <MoveRight className="size-4" />
-                </Button>
-            )}
             {results.length > 0 && (
                 <>
-                    <p>{results.length} results found:</p>
+                    <p className="text-sm text-muted-foreground">{results.length} result{results.length > 1 ? "s" : ""} found:</p>
                     <div className="search-results">
-                        {results.map((city) => (
-                            <SearchItem key={city.place_id} city={city} />
+                        {results.map((result) => (
+                            <SearchItem key={result.place_id} city={result} />
                         ))}
                     </div>
                 </>

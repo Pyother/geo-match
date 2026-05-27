@@ -8,7 +8,7 @@ import { AppContext } from "@/app/page";
 import { getCityDetails } from "./actions";
 
 // * Types:
-import { City, Details } from "@/app/types";
+import { City } from "@/app/types";
 
 // * Icons:
 import { Clock } from "lucide-react";
@@ -33,11 +33,9 @@ const countryFlag = (code: string) =>
 const SearchItem = ({
     city,
     severity = "default",
-    removable = false,
 }: {
     city: City,
     severity?: "default" | "info",
-    removable?: boolean
 }) => {
     const flag = city.country_code ? countryFlag(city.country_code) : null;
     const tz = city.timezone;
@@ -47,7 +45,7 @@ const SearchItem = ({
         <Card 
             size="sm" 
             severity={severity} 
-            className='w-full max-w-md'
+            className='search-item w-full max-w-md'
         >
             <CardHeader>
                 <CardTitle className="flex items-center gap-1.5">
@@ -73,30 +71,16 @@ const SearchItem = ({
                 </CardContent>
             )}
             <CardFooter className="flex-col gap-2">
-                {!removable && (
-                    <Button 
-                        className="w-full" 
-                        onClick={async () => { 
-                            setCity(city); 
-                            const details = await getCityDetails(city);
-                            setDetails(details);
-                        }}
-                    >
-                        Select
-                    </Button>
-                )}
-                {removable && (
-                    <Button 
-                        variant="destructive" 
-                        className="w-full" 
-                        onClick={() => {
-                            setCity(null);
-                            setDetails(null);
-                        }}
-                    >
-                        Remove
-                    </Button>
-                )}
+                <Button 
+                    className="w-full" 
+                    onClick={async () => { 
+                        setCity(city); 
+                        const details = await getCityDetails(city);
+                        setDetails(details);
+                    }}
+                >
+                    Select
+                </Button>
             </CardFooter>
         </Card>
     );
