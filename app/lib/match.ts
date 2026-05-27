@@ -5,7 +5,11 @@ import type { Polygon, MultiPolygon, Feature } from 'geojson';
 // * Types:
 import { Place } from "@/app/types";
 
-export function getMatches(places: Place[], grid: Feature<Polygon | MultiPolygon>[]) {
+export type Match = Feature<Polygon | MultiPolygon> & {
+    properties: Record<string, unknown> & { count: number };
+};
+
+export function getMatches(places: Place[], grid: Feature<Polygon | MultiPolygon>[]): Match[] {
     
     console.log("Places:", places);
     console.log("Grid:", grid);

@@ -16,6 +16,10 @@ const Map = dynamic(() => import("./features/map/map"), { ssr: false });
 // * Types:
 type View = "search" | "preferences" | "map";
 import { City, Preference, Details, Place } from "@/app/types";
+import type { Match } from "@/app/lib/match";
+import type { getGrid } from "@/app/lib/grid";
+
+type Grid = ReturnType<typeof getGrid>;
 
 // * App context:
 export const AppContext = createContext<{
@@ -29,6 +33,10 @@ export const AppContext = createContext<{
     setDetails: Dispatch<SetStateAction<Details | null>>;
     places: Place[] | null;
     setPlaces: Dispatch<SetStateAction<Place[] | null>>;
+    matches: Match[] | null;
+    setMatches: Dispatch<SetStateAction<Match[] | null>>;
+    grid: Grid | null;
+    setGrid: Dispatch<SetStateAction<Grid | null>>;
 }>({
     view: "search",
     setView: () => {},
@@ -40,6 +48,10 @@ export const AppContext = createContext<{
     setDetails: () => {},
     places: null,
     setPlaces: () => {},
+    matches: null,
+    setMatches: () => {},
+    grid: null,
+    setGrid: () => {},
 });
 
 export default function HomePage() {
@@ -49,6 +61,19 @@ export default function HomePage() {
     const [preferences, setPreferences] = useState<Preference[] | null>(null);
     const [details, setDetails] = useState<Details | null>(null);
     const [places, setPlaces] = useState<Place[] | null>(null);
+    const [matches, setMatches] = useState<Match[] | null>(null);
+    const [grid, setGrid] = useState<Grid | null>(null);
+
+    const handleSetCity: Dispatch<SetStateAction<City | null>> = (value) => {
+        setCity(value);
+        setMatches(null);
+        setGrid(null);
+    };
+
+    const handleSetPreferences: Dispatch<SetStateAction<Preference[] | null>> = (value) => {
+        setPreferences(value);
+        setMatches(null);
+    };
 
     return (
         <AppContext.Provider 
@@ -56,13 +81,17 @@ export default function HomePage() {
                 view, 
                 setView, 
                 preferences, 
-                setPreferences, 
+                setPreferences: handleSetPreferences, 
                 city, 
-                setCity,
+                setCity: handleSetCity,
                 details,
                 setDetails,
                 places,
-                setPlaces
+                setPlaces,
+                matches,
+                setMatches,
+                grid,
+                setGrid,
             }}
         >
             <div className="app">

@@ -11,12 +11,15 @@ import 'leaflet/dist/leaflet.css';
 // * Lib:
 import { getArea } from "@/app/lib/area";
 import { getGrid } from "@/app/lib/grid";
+import { getMatches } from "@/app/lib/match";
 
 // * Types:
 import type { Geometry } from 'geojson';
 
 // * UI:
 import { Card, CardContent } from "@/app/ui/card";
+import { Button } from "@/app/ui/button";
+import { ChartNoAxesColumn } from "lucide-react";
 import MapFallback from "./map-fallback";
 import GridFallback from "./grid-fallback";
 import CityBoundaries from "./city-boundaries";
@@ -26,16 +29,17 @@ import "./map.css";
 
 const Map = () => {
 
-    const { city, preferences, details, places } = useContext(AppContext);
+    const { city, preferences, details, places, matches, setMatches, grid, setGrid } = useContext(AppContext);
     const area = useMemo(() => details?.geometry ? getArea(details.geometry as Geometry) : null, [details]);
-    const [grid, setGrid] = useState<ReturnType<typeof getGrid> | null>(null);
-    const isCalculating = !!details?.geometry && grid === null;
+    const [isMatchCalculating, setIsMatchCalculating] = useState(false);
+    const isGridCalculating = !!details?.geometry && grid === null;
 
     useEffect(() => {
         if (!details?.geometry) {
-            const id = setTimeout(() => setGrid(null), 0);
-            return () => clearTimeout(id);
+            setGrid(null);
+            return;
         }
+        if (grid !== null) return;
         const worker = new Worker(new URL('@/app/lib/grid.worker.ts', import.meta.url));
         worker.onmessage = (e: MessageEvent<ReturnType<typeof getGrid>>) => {
             setGrid(e.data);
@@ -43,7 +47,17 @@ const Map = () => {
         };
         worker.postMessage(details.geometry);
         return () => worker.terminate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [details]);
+
+    const handleCalculate = () => {
+        if (!grid || !places) return;
+        setIsMatchCalculating(true);
+        setTimeout(() => {
+            setMatches(getMatches(places, grid.features));
+            setIsMatchCalculating(false);
+        }, 0);
+    };
 
     return (
         <Card className="map-container">
@@ -58,12 +72,21 @@ const Map = () => {
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                        {isCalculating && <GridFallback />}
                         {details?.geometry && (
                             <>
                                 <CityBoundaries geometry={details.geometry} />
-                                {grid && places && <CityGrid grid={grid} places={places} />}
+                                {matches && <CityGrid matches={matches} />}
                             </>
+                        )}
+                        {isGridCalculating && <GridFallback />}
+                        {isMatchCalculating && <GridFallback calculating="matches" />}
+                        {grid && places && !matches && !isMatchCalculating && !isGridCalculating && (
+                            <div className="map-action">
+                                <Button onClick={handleCalculate}>
+                                    <ChartNoAxesColumn className="size-4" />
+                                    Calculate matches
+                                </Button>
+                            </div>
                         )}
                         <InvalidateSize />
                     </MapContainer>
