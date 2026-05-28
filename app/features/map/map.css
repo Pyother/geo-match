@@ -60,3 +60,16 @@
     gap: var(--spacing-md);
     z-index: 1000;
 }
+
+.cluster-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #3b016e;
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 600;
+    width: 32px !important;
+    height: 32px !important;
+}
