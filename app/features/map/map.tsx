@@ -25,6 +25,7 @@ import MapPanel from "./map-panel";
 import GridFallback from "./grid-fallback";
 import CityBoundaries from "./city-boundaries";
 import CityGrid from "./city-grid";
+import CityPlaces from "./city-places";
 import InvalidateSize from "./invalidate-size";
 import "./map.css";
 
@@ -77,6 +78,7 @@ const Map = () => {
                             <>
                                 <CityBoundaries geometry={details.geometry} />
                                 {matches && <CityGrid matches={matches} />}
+                                {places && <CityPlaces places={{ type: "FeatureCollection", features: places }} />}
                             </>
                         )}
                         {isGridCalculating && <GridFallback />}

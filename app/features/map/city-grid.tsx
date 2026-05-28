@@ -1,15 +1,18 @@
 "use client";
 
+// * Leaflet:
 import { GeoJSON } from 'react-leaflet';
+
+// * Types:
 import type { FeatureCollection, Polygon, MultiPolygon } from 'geojson';
+
+// * Constants:
 import { palette } from '@/app/consts/palette';
+
+// * Lib:
 import type { Match } from '@/app/lib/match';
 
-type Props = {
-    matches: Match[];
-};
-
-const CityGrid = ({ matches }: Props) => {
+const CityGrid = ({ matches }: { matches: Match[] }) => {
 
     const maxCount = Math.max(...matches.map((f) => f.properties.count), 1);
     const getColor = (count: number) => palette[Math.round((count / maxCount) * 6)];

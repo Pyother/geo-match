@@ -1,6 +1,9 @@
 "use client";
 
+// * Leaflet:
 import { GeoJSON } from 'react-leaflet';
+
+// * Types:
 import type { GeoJSONGeometry } from '@/app/types';
 
 const CityBoundaries = ({ geometry }: { geometry: GeoJSONGeometry }) => {

@@ -16,6 +16,10 @@
     align-items: center;
 }
 
+.search-item {
+    justify-self: center;
+}
+
 
 @media (min-width: 769px) and (max-width: 1024px) {
     .search-results {
