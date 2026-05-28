@@ -92,7 +92,7 @@ const Preferences = () => {
                                 />
                             }
                             {error && 
-                                <p className="text-sm text-destructive">{error}</p>
+                                <p className="text-xs text-destructive">{error}</p>
                             }
                         </CardContent>
                         <CardFooter className="flex flex-col items-stretch gap-(--spacing-sm)">

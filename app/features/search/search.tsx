@@ -1,12 +1,20 @@
 "use client";
 
+// * React:
 import { useState, useContext } from "react";
 import { AppContext } from "@/app/page";
-import { MapPin, MoveRight } from "lucide-react";
+
+// * Types:
 import type { City } from "@/app/types";
+
+// * Actions:
 import { getPlaces } from "./actions";
+
+// * UI:
 import { Card, CardContent, CardFooter } from "@/app/ui/card";
 import { Button } from "@/app/ui/button";
+import { MapPin, MoveRight } from "lucide-react";
+import { Alert } from "@/app/ui/alert";
 import CityChip from "./city-chip";
 import SearchInput from "./search-input";
 import SearchItem from "./search-item";
@@ -22,6 +30,7 @@ const Search = () => {
     const handleSearch = async (query: string) => {
         setLoading(true);
         setError(null);
+        setResults([]);
         try {
             const data = await getPlaces(query);
             setResults(data?.results ?? []);
@@ -60,7 +69,7 @@ const Search = () => {
             </div>
             {results.length > 0 && (
                 <>
-                    <p className="text-sm text-muted-foreground">{results.length} result{results.length > 1 ? "s" : ""} found:</p>
+                    <p className="text-xs text-muted-foreground">{results.length} result{results.length > 1 ? "s" : ""} found:</p>
                     <div className="search-results">
                         {results.map((result) => (
                             <SearchItem key={result.place_id} city={result} />
